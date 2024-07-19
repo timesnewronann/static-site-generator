@@ -27,3 +27,27 @@ class HTMLNode:
             key_value_pairs.append(f'{key}="{value}"')
 
         return " ".join(key_value_pairs)
+
+# Child class of HTMLNode
+
+
+class LeafNode(HTMLNode):
+
+    def __init__(self, value, tag=None, props=None):
+        if value is None:
+            raise ValueError("Value is a required attribute")
+        super().__init__(tag, value, None, props)
+
+    # Renders a leaf node as an HTML string (by returning a string)
+    def to_html(self):
+        if self.value is None:
+            raise ValueError("Value is a requried attribute")
+        if self.tag is None:
+            return self.value
+
+        # Otherwise render an HTML tag
+        props_str = super().props_to_html()
+        if props_str:
+            return f'<{self.tag} {props_str}>{self.value}</{self.tag}>'
+        else:
+            return f'<{self.tag}>{self.value}</{self.tag}>'
