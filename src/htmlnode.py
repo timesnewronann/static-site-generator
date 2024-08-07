@@ -56,19 +56,26 @@ class LeafNode(HTMLNode):
 class ParentNode(HTMLNode):
 
     def __init__(self, children, tag, props=None):
-        if children is None:
+        if not children:
             raise ValueError("Children is a required attribute")
         if tag is None:
             raise ValueError("Tag is a required attribute")
-        super().__init__(children, tag, props)
+        super().__init__(tag=tag, children=children, props=props)
 
     def to_html(self):
         # If the object doesn't have a tag raise a value Error
         if self.tag is None:
             raise ValueError("Tag is a required attribute")
         # If there are no children raise a value error
-        if self.children is None:
+        if not self.children:
             raise ValueError("Children is a required attribute")
 
         # Return a string representing the HTML tag of the node and its children.
-        # Recursive method -> each recursion is being called on
+        # Recursive method -> each recursion is being called on a nested child
+        # intialize empty string:
+        html_str = ""
+        for child in self.children:
+            html_str += child.to_html()
+
+        if html_str:
+            return f'<{self.tag}>{html_str}</{self.tag}>'
